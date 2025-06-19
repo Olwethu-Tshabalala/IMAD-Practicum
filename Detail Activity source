@@ -1,0 +1,52 @@
+Code for DetailActivity.kt
+
+package com.example.playlistapp
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
+class DetailActivity : AppCompatActivity() {
+
+    private lateinit var songTitles: ArrayList<String>
+    private lateinit var artistNames: ArrayList<String>
+    private lateinit var ratings: ArrayList<Int>
+    private lateinit var comments: ArrayList<String>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_detail)
+
+        songTitles = intent.getStringArrayListExtra("titles") ?: arrayListOf()
+        artistNames = intent.getStringArrayListExtra("artists") ?: arrayListOf()
+        ratings = intent.getIntegerArrayListExtra("ratings") ?: arrayListOf()
+        comments = intent.getStringArrayListExtra("comments") ?: arrayListOf()
+
+        val textViewSongs = findViewById<TextView>(R.id.textViewSongs)
+        val textViewAvgRating = findViewById<TextView>(R.id.textViewAvgRating)
+        val btnShowSongs = findViewById<Button>(R.id.btnShowSongs)
+        val btnShowAverage = findViewById<Button>(R.id.btnShowAverage)
+        val btnBack = findViewById<Button>(R.id.btnBack)
+
+        btnShowSongs.setOnClickListener {
+            val builder = StringBuilder()
+            for (i in songTitles.indices) {
+                builder.append("Song: ${songTitles[i]}\n")
+                builder.append("Artist: ${artistNames[i]}\n")
+                builder.append("Rating: ${ratings[i]}\n")
+                builder.append("Comment: ${comments[i]}\n\n")
+            }
+            textViewSongs.text = builder.toString()
+        }
+
+        btnShowAverage.setOnClickListener {
+            val avg = if (ratings.isNotEmpty()) ratings.average() else 0.0
+            textViewAvgRating.text = "Average Rating: %.2f".format(avg)
+        }
+
+        btnBack.setOnClickListener {
+            finish()
+        }
+    }
+}
